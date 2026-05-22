@@ -416,9 +416,9 @@ export default function Page() {
             </h2>
 
             <p className="mt-5 text-lg leading-8 text-slate-600">
-              Halı yıkama hizmetinde müşteriler hızlı bilgi almak, güvenmek ve
-              kolayca ulaşmak ister. Bu yapı da tam olarak buna göre
-              hazırlanmıştır.
+           Halılarınızı güvenle teslim edebileceğiniz, süreç hakkında kolayca bilgi
+alabileceğiniz ve ihtiyaç duyduğunuzda hızlıca ulaşabileceğiniz bir hizmet
+anlayışıyla çalışıyoruz.
             </p>
 
             <div className="mt-8 grid gap-3 sm:grid-cols-2">
