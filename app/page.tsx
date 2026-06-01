@@ -1,814 +1,1376 @@
-"use client";
+const phoneDisplay = "+90 552 503 79 70";
+const phoneTel = "+905525037970";
 
-import { useEffect, useState } from "react";
-import {
-  Phone,
-  MessageCircle,
-  MapPin,
-  Sparkles,
-  ShieldCheck,
-  Truck,
-  Clock,
-  Star,
-  Menu,
-  X,
-  Send,
-  ChevronDown,
-  ArrowRight,
-  Check,
-} from "lucide-react";
+const createWpLink = (message: string) =>
+  `https://wa.me/905525037970?text=${encodeURIComponent(message)}`;
 
-const businessName = "Gülüm Halı Yıkama Fabrikası";
-const phone = "0531 814 70 28";
-const phoneHref = "tel:+905318147028";
+const whatsappGeneral = createWpLink(
+  "Merhaba, Güven Temizlik Alanya hizmetleri hakkında bilgi almak istiyorum."
+);
 
-const whatsappHref =
-  "https://wa.me/905318147028?text=Merhaba%2C%20web%20sitenizden%20yaz%C4%B1yorum.%20Halı%20yıkama%20hizmeti%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum.";
+const whatsappHome = createWpLink(
+  "Merhaba, ev temizliği hizmetiniz hakkında bilgi almak istiyorum. Konumum Alanya."
+);
 
-const reviewWhatsappHref =
-  "https://wa.me/905318147028?text=Merhaba%2C%20G%C3%BCl%C3%BCm%20Hal%C4%B1%20Y%C4%B1kama%20Fabrikas%C4%B1%20hakk%C4%B1nda%20yorumumu%20payla%C5%9Fmak%20istiyorum.%0A%0A%C4%B0%C5%9Fletme%20hakk%C4%B1ndaki%20yorumum%20%3D%20";
+const whatsappOffice = createWpLink(
+  "Merhaba, ofis temizliği hizmetiniz hakkında bilgi almak istiyorum. Alanya içinde hizmet alacağım."
+);
 
-const address = "Fatih Mahallesi Mevlana Caddesi No:60, Develi / Kayseri";
+const whatsappAfterBuild = createWpLink(
+  "Merhaba, inşaat/tadilat sonrası temizlik hizmetiniz için bilgi ve fiyat almak istiyorum."
+);
 
-const mapsHref =
-  "https://www.google.com/maps/search/?api=1&query=Fatih%20Mahallesi%20Mevlana%20Caddesi%20No%2060%20Develi%20Kayseri";
+const whatsappVilla = createWpLink(
+  "Merhaba, villa/yazlık temizliği hizmetiniz hakkında bilgi almak istiyorum. Alanya bölgesindeyim."
+);
 
-const heroSlides = [
-  {
-    image:
-      "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1900&q=80",
-    eyebrow: "Profesyonel Halı Yıkama",
-    title: "Halılarınız için temiz, ferah ve güvenilir hizmet.",
-    text: "Gülüm Halı Yıkama Fabrikası; Develi ve çevresinde halı, koltuk ve ev tekstili temizliği için hızlı ulaşılabilir hizmet sunar.",
-  },
-  {
-    image:
-      "https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?auto=format&fit=crop&w=1900&q=80",
-    eyebrow: "Hijyen Odaklı Hizmet",
-    title: "Evinizin temizliğine özen katan profesyonel yaklaşım.",
-    text: "Temizlik süreci, ürünlerinize zarar vermeden hijyen ve memnuniyet odaklı şekilde yürütülür.",
-  },
-  {
-    image:
-      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1900&q=80",
-    eyebrow: "Kolay İletişim",
-    title: "Tek tıkla arayın, WhatsApp üzerinden bilgi alın.",
-    text: "Fiyat, teslim alma ve hizmet bölgesi hakkında hızlıca bilgi almak için bize ulaşabilirsiniz.",
-  },
-];
+const whatsappWindow = createWpLink(
+  "Merhaba, cam temizliği hizmetiniz hakkında bilgi almak istiyorum."
+);
+
+const whatsappHotel = createWpLink(
+  "Merhaba, otel/apart temizlik hizmetiniz hakkında bilgi almak istiyorum. Alanya bölgesindeyim."
+);
+
+const images = {
+  hero:
+    "https://images.pexels.com/photos/4239031/pexels-photo-4239031.jpeg?auto=compress&cs=tinysrgb&w=1800",
+  home:
+    "https://images.pexels.com/photos/4239146/pexels-photo-4239146.jpeg?auto=compress&cs=tinysrgb&w=1400",
+  office:
+    "https://images.pexels.com/photos/4107120/pexels-photo-4107120.jpeg?auto=compress&cs=tinysrgb&w=1400",
+  window:
+    "https://images.pexels.com/photos/4107283/pexels-photo-4107283.jpeg?auto=compress&cs=tinysrgb&w=1400",
+  villa:
+    "https://images.pexels.com/photos/4108715/pexels-photo-4108715.jpeg?auto=compress&cs=tinysrgb&w=1400",
+  detail:
+    "https://images.pexels.com/photos/4107112/pexels-photo-4107112.jpeg?auto=compress&cs=tinysrgb&w=1400",
+  supplies:
+    "https://images.pexels.com/photos/5217929/pexels-photo-5217929.jpeg?auto=compress&cs=tinysrgb&w=1400",
+  hotel:
+    "https://images.pexels.com/photos/4108714/pexels-photo-4108714.jpeg?auto=compress&cs=tinysrgb&w=1400",
+  floor:
+    "https://images.pexels.com/photos/4099471/pexels-photo-4099471.jpeg?auto=compress&cs=tinysrgb&w=1400",
+};
 
 const services = [
   {
-    title: "Halı Yıkama",
-    text: "Halılarınız türüne ve kullanım durumuna uygun şekilde temizlenir. Amaç sadece yıkamak değil, temiz ve ferah bir kullanım hissi sunmaktır.",
+    title: "Ev Temizliği",
+    text: "Mutfak, banyo, oda, cam, yüzey ve zemin temizliğiyle evinizi ferah ve kullanıma hazır hale getiriyoruz.",
+    img: images.home,
+    wp: whatsappHome,
   },
   {
-    title: "Koltuk Yıkama",
-    text: "Koltuk yüzeylerinde oluşan toz, leke ve kötü kokulara karşı özenli temizlik hizmeti sağlanır.",
+    title: "Ofis Temizliği",
+    text: "Çalışma alanları, masa çevresi, ortak kullanım alanları ve zeminlerde düzenli ve titiz temizlik sağlıyoruz.",
+    img: images.office,
+    wp: whatsappOffice,
   },
   {
-    title: "Yatak Temizliği",
-    text: "Yatak yüzeylerinde hijyen ve ferahlık hissi için düzenli temizlik desteği sunulur.",
+    title: "İnşaat Sonrası Temizlik",
+    text: "Tadilat ve inşaat sonrası kalan toz, boya izi, harç kalıntısı ve kaba kirler için detaylı temizlik uyguluyoruz.",
+    img: images.detail,
+    wp: whatsappAfterBuild,
   },
   {
-    title: "Stor Perde Yıkama",
-    text: "Stor perdeler hassas yapısına uygun şekilde temizlenir ve yeniden kullanıma hazır hale getirilir.",
+    title: "Villa ve Yazlık Temizliği",
+    text: "Alanya’daki villa, yazlık ve geniş metrekareli alanlar için planlı, detaylı ve kapsamlı temizlik hizmeti sunuyoruz.",
+    img: images.villa,
+    wp: whatsappVilla,
   },
   {
-    title: "Ofis ve İş Yeri Temizliği",
-    text: "İş yerleri için daha düzenli, temiz ve güven veren kullanım alanları oluşturulmasına destek olunur.",
+    title: "Cam Temizliği",
+    text: "Ev, ofis, mağaza, apart ve geniş cam yüzeylerinde daha parlak, izsiz ve net bir görünüm hedefliyoruz.",
+    img: images.window,
+    wp: whatsappWindow,
   },
   {
-    title: "Adresten Alma ve Teslim",
-    text: "Uygun bölgelerde ürünleriniz adresinizden alınır, temizlik sonrası teslim planlaması yapılır.",
+    title: "Otel ve Apart Temizliği",
+    text: "Turizm bölgesi Alanya’da otel, apart, günlük kiralık ve sezonluk işletmeler için temizlik desteği veriyoruz.",
+    img: images.hotel,
+    wp: whatsappHotel,
   },
 ];
 
-const whyUs = [
-  "Develi ve çevresinde ulaşılabilir hizmet",
-  "Telefon ve WhatsApp üzerinden hızlı iletişim",
-  "Halı ve ev tekstili temizliğinde özenli süreç",
-  "Müşteri memnuniyetini önceleyen çalışma anlayışı",
-  "Konum, adres ve iletişim bilgilerinin net olması",
-  "Temiz, ferah ve güven veren hizmet yaklaşımı",
-];
-
-const reviews = [
-  {
-    name: "Ayşe K.",
-    text: "Halılarımız tertemiz geldi, özellikle kokusu ve paketlemesi çok güzeldi. Teşekkür ederiz.",
-  },
-  {
-    name: "Mehmet T.",
-    text: "İletişimleri hızlıydı, halılarımızı zamanında teslim ettiler. Memnun kaldık.",
-  },
-  {
-    name: "Fatma A.",
-    text: "Evde çocuk olduğu için hijyen bizim için önemliydi. Sonuçtan çok memnun kaldık.",
-  },
-  {
-    name: "Hasan Y.",
-    text: "WhatsApp’tan hemen dönüş yaptılar. Süreç hızlı ve sorunsuz ilerledi.",
-  },
-  {
-    name: "Elif S.",
-    text: "Halılar eski canlılığına kavuştu. Develi’de güvenle tercih edilebilir.",
-  },
+const areas = [
+  "Alanya Merkez",
+  "Mahmutlar",
+  "Oba",
+  "Tosmur",
+  "Kestel",
+  "Konaklı",
+  "Avsallar",
+  "Cikcik",
+  "Kargıcak",
+  "Payallar",
+  "Türkler",
+  "Demirtaş",
 ];
 
 const steps = [
-  "Telefon veya WhatsApp üzerinden bize ulaşın.",
-  "Halı, koltuk veya temizlik ihtiyacınızı belirtin.",
-  "Hizmet süreci ve teslim bilgisi hakkında bilgi alın.",
-  "Uygun planlama ile ürünlerinizi teslim edin veya alınmasını talep edin.",
+  "WhatsApp veya arama ile talep alınır.",
+  "Alan ve temizlik türü netleştirilir.",
+  "Uygun ekip ve saat planlanır.",
+  "Temizlik sonrası son kontrol yapılır.",
 ];
 
-export default function Page() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [activeSlide, setActiveSlide] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveSlide((prev) => (prev + 1) % heroSlides.length);
-    }, 4200);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const currentSlide = heroSlides[activeSlide];
-
+export default function Home() {
   return (
-    <main className="min-h-screen bg-[#f7fbf8] text-[#112018]">
-      <div className="hidden bg-emerald-950 text-white md:block">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3 text-sm">
-          <div className="flex items-center gap-7">
-            <a href={phoneHref} className="flex items-center gap-2 font-semibold">
-              <Phone size={15} />
-              {phone}
-            </a>
+    <main className="page">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "LocalBusiness",
+            name: "Güven Temizlik Alanya",
+            image: images.hero,
+            telephone: phoneDisplay,
+            areaServed: "Alanya, Antalya",
+            address: {
+              "@type": "PostalAddress",
+              addressLocality: "Alanya",
+              addressRegion: "Antalya",
+              addressCountry: "TR",
+            },
+            priceRange: "₺₺",
+          }),
+        }}
+      />
 
-            <a
-              href={mapsHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 font-semibold"
-            >
-              <MapPin size={15} />
-              Develi / Kayseri
-            </a>
-          </div>
+      <header className="header">
+        <a href="#anasayfa" className="brand" aria-label="Güven Temizlik Alanya">
+          <span className="brandMark">G</span>
+          <span>
+            <strong>Güven Temizlik</strong>
+            <small>Alanya Profesyonel Temizlik</small>
+          </span>
+        </a>
 
-          <p className="font-semibold text-emerald-100">
-            Halı yıkama ve temizlik hizmetleri için hızlı iletişim.
-          </p>
-        </div>
-      </div>
+        <input id="menuToggle" className="menuToggle" type="checkbox" />
 
-      <header className="sticky top-0 z-50 border-b border-emerald-100 bg-white/95 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 md:px-5 md:py-4">
-          <a href="#" className="flex min-w-0 items-center gap-3">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-emerald-700 text-white">
-              <Sparkles size={21} />
-            </div>
+        <label htmlFor="menuToggle" className="menuButton" aria-label="Menüyü aç">
+          <span />
+          <span />
+          <span />
+        </label>
 
-            <div className="min-w-0">
-              <p className="truncate text-base font-black leading-tight text-emerald-950 md:text-xl">
-                Gülüm
-              </p>
-              <p className="truncate text-[11px] font-bold text-emerald-700 md:text-xs">
-                Halı Yıkama Fabrikası
-              </p>
-            </div>
-          </a>
+        <nav className="nav">
+          <a href="#anasayfa">Anasayfa</a>
+          <a href="#hizmetler">Hizmetler</a>
+          <a href="#neden">Neden Biz?</a>
+          <a href="#surec">Süreç</a>
+          <a href="#bolgeler">Bölgeler</a>
+          <a href="#iletisim">İletişim</a>
 
-          <nav className="hidden items-center gap-7 text-sm font-bold text-slate-700 lg:flex">
-            <a href="#" className="transition hover:text-emerald-700">
-              Anasayfa
-            </a>
-
-            <a href="#hakkimizda" className="transition hover:text-emerald-700">
-              Hakkımızda
-            </a>
-
-            <div className="group relative">
-              <a
-                href="#hizmetler"
-                className="flex items-center gap-1 transition hover:text-emerald-700"
-              >
-                Hizmetlerimiz
-                <ChevronDown size={16} />
-              </a>
-
-              <div className="invisible absolute left-0 top-8 w-64 translate-y-2 border border-emerald-100 bg-white p-3 opacity-0 shadow-2xl transition group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
-                {services.map((service) => (
-                  <a
-                    key={service.title}
-                    href="#hizmetler"
-                    className="block border-b border-emerald-50 px-3 py-3 text-sm font-bold text-slate-700 last:border-b-0 hover:text-emerald-700"
-                  >
-                    {service.title}
-                  </a>
-                ))}
-              </div>
-            </div>
-
-            <a href="#surec" className="transition hover:text-emerald-700">
-              Süreç
-            </a>
-
-            <a href="#yorumlar" className="transition hover:text-emerald-700">
-              Yorumlar
-            </a>
-
-            <a href="#iletisim" className="transition hover:text-emerald-700">
-              İletişim
-            </a>
-          </nav>
-
-          <div className="hidden items-center gap-3 md:flex">
-            <a
-              href={phoneHref}
-              className="border border-emerald-700 px-5 py-3 text-sm font-black text-emerald-800 transition hover:bg-emerald-50"
-            >
-              Hemen Ara
-            </a>
-
-            <a
-              href={whatsappHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-emerald-700 px-5 py-3 text-sm font-black text-white transition hover:bg-emerald-800"
-            >
-              WhatsApp
-            </a>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => setMenuOpen((prev) => !prev)}
-            className="flex h-11 w-11 shrink-0 items-center justify-center bg-emerald-50 text-emerald-900 lg:hidden"
-            aria-label="Mobil menüyü aç"
-          >
-            {menuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
-
-        {menuOpen && (
-          <div className="border-t border-emerald-100 bg-white px-4 py-4 shadow-xl lg:hidden">
-            <nav className="flex flex-col text-sm font-bold text-slate-700">
-              {[
-                ["Anasayfa", "#"],
-                ["Hakkımızda", "#hakkimizda"],
-                ["Hizmetlerimiz", "#hizmetler"],
-                ["Süreç", "#surec"],
-                ["Yorumlar", "#yorumlar"],
-                ["İletişim", "#iletisim"],
-              ].map(([label, href]) => (
-                <a
-                  key={label}
-                  onClick={() => setMenuOpen(false)}
-                  href={href}
-                  className="border-b border-emerald-100 px-1 py-4 last:border-b-0"
-                >
-                  {label}
-                </a>
-              ))}
-
-              <div className="mt-3 grid grid-cols-2 gap-3">
-                <a
-                  href={phoneHref}
-                  onClick={() => setMenuOpen(false)}
-                  className="flex items-center justify-center gap-2 bg-slate-950 px-4 py-3 text-center text-white"
-                >
-                  <Phone size={18} />
-                  Ara
-                </a>
-
-                <a
-                  href={whatsappHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => setMenuOpen(false)}
-                  className="flex items-center justify-center gap-2 bg-emerald-700 px-4 py-3 text-center text-white"
-                >
-                  <MessageCircle size={18} />
-                  WhatsApp
-                </a>
-              </div>
-            </nav>
-          </div>
-        )}
-      </header>
-
-      <section className="relative min-h-[700px] overflow-hidden md:min-h-[760px]">
-        {heroSlides.map((slide, index) => (
-          <img
-            key={slide.image}
-            src={slide.image}
-            alt="Halı yıkama ve temizlik hizmeti"
-            className={`absolute inset-0 h-full w-full object-cover transition duration-1000 ${
-              activeSlide === index ? "opacity-100" : "opacity-0"
-            }`}
-          />
-        ))}
-
-        <div className="absolute inset-0 bg-gradient-to-r from-emerald-950/95 via-emerald-950/70 to-emerald-900/10" />
-        <div className="absolute inset-0 bg-gradient-to-t from-emerald-950/60 via-transparent to-transparent" />
-
-        <div className="relative mx-auto flex min-h-[700px] max-w-7xl items-center px-5 py-16 md:min-h-[760px]">
-          <div className="max-w-3xl text-white">
-            <p className="mb-5 inline-flex items-center gap-2 border-l-4 border-emerald-400 pl-4 text-sm font-black uppercase tracking-[0.25em] text-emerald-100">
-              {currentSlide.eyebrow}
-            </p>
-
-            <h1 className="text-4xl font-black leading-tight tracking-tight md:text-7xl">
-              {currentSlide.title}
-            </h1>
-
-            <p className="mt-6 max-w-2xl text-lg font-medium leading-8 text-emerald-50 md:text-xl">
-              {currentSlide.text}
-            </p>
-
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <a
-                href={whatsappHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 bg-emerald-600 px-7 py-4 text-base font-black text-white transition hover:bg-emerald-500"
-              >
-                <MessageCircle size={21} />
-                WhatsApp’tan Bilgi Al
-              </a>
-
-              <a
-                href={phoneHref}
-                className="flex items-center justify-center gap-2 bg-white px-7 py-4 text-base font-black text-emerald-950 transition hover:bg-emerald-50"
-              >
-                <Phone size={21} />
-                Hemen Ara
-              </a>
-            </div>
-
-            <div className="mt-10 grid max-w-2xl gap-4 border-y border-white/20 py-6 sm:grid-cols-3">
-              <div>
-                <p className="text-3xl font-black">01</p>
-                <p className="mt-1 text-sm font-semibold text-emerald-50/80">
-                  Hızlı iletişim
-                </p>
-              </div>
-
-              <div>
-                <p className="text-3xl font-black">02</p>
-                <p className="mt-1 text-sm font-semibold text-emerald-50/80">
-                  Özenli temizlik
-                </p>
-              </div>
-
-              <div>
-                <p className="text-3xl font-black">03</p>
-                <p className="mt-1 text-sm font-semibold text-emerald-50/80">
-                  Güvenilir hizmet
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-8 flex gap-2">
-              {heroSlides.map((_, index) => (
-                <button
-                  key={index}
-                  type="button"
-                  onClick={() => setActiveSlide(index)}
-                  className={`h-1.5 transition ${
-                    activeSlide === index ? "w-12 bg-emerald-400" : "w-8 bg-white/40"
-                  }`}
-                  aria-label={`Slider ${index + 1}`}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="hakkimizda" className="bg-white py-20">
-        <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 lg:grid-cols-[0.9fr_1.1fr]">
-          <div className="relative">
-            <img
-              src="https://images.unsplash.com/photo-1585421514738-01798e348b17?auto=format&fit=crop&w=1700&q=80"
-              alt="Temizlik hizmeti"
-              className="h-[420px] w-full object-cover md:h-[560px]"
-            />
-
-            <div className="absolute bottom-0 left-0 bg-emerald-950 px-7 py-6 text-white">
-              <p className="text-3xl font-black">Develi</p>
-              <p className="mt-1 text-sm font-semibold text-emerald-100">
-                Kayseri ve çevresi
-              </p>
-            </div>
-          </div>
-
-          <div>
-            <p className="border-l-4 border-emerald-700 pl-4 text-sm font-black uppercase tracking-[0.25em] text-emerald-700">
-              Hakkımızda
-            </p>
-
-            <h2 className="mt-5 text-3xl font-black leading-tight text-emerald-950 md:text-5xl">
-              Halılarınızın temizliği için güvenilir, ulaşılabilir ve özenli
-              hizmet sunuyoruz.
-            </h2>
-
-            <p className="mt-6 text-lg leading-8 text-slate-600">
-              Gülüm Halı Yıkama Fabrikası olarak halı, koltuk ve ev tekstili
-              temizliği ihtiyaçlarında müşterilerimize pratik iletişim, net bilgi
-              ve özenli hizmet anlayışıyla destek oluyoruz.
-            </p>
-
-            <div className="mt-8 space-y-4 border-t border-emerald-100 pt-6">
-              {whyUs.map((item) => (
-                <div key={item} className="flex items-start gap-3">
-                  <Check className="mt-1 shrink-0 text-emerald-700" size={20} />
-                  <p className="font-semibold leading-7 text-slate-700">{item}</p>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <a
-                href={whatsappHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 bg-emerald-700 px-6 py-4 font-black text-white transition hover:bg-emerald-800"
-              >
-                <MessageCircle size={21} />
-                WhatsApp’tan Yaz
-              </a>
-
-              <a
-                href={mapsHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 bg-slate-950 px-6 py-4 font-black text-white transition hover:bg-slate-800"
-              >
-                <MapPin size={21} />
-                Konuma Git
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="hizmetler" className="py-20">
-        <div className="mx-auto max-w-7xl px-5">
-          <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
-            <div>
-              <p className="border-l-4 border-emerald-700 pl-4 text-sm font-black uppercase tracking-[0.25em] text-emerald-700">
-                Hizmetlerimiz
-              </p>
-
-              <h2 className="mt-5 text-3xl font-black leading-tight text-emerald-950 md:text-5xl">
-                Temiz, ferah ve güven veren alanlar için profesyonel hizmet.
-              </h2>
-
-              <p className="mt-6 text-lg leading-8 text-slate-600">
-                Halı yıkamadan koltuk temizliğine kadar ihtiyaç duyduğunuz
-                hizmetlerde bilgi almak için doğrudan iletişime geçebilirsiniz.
-              </p>
-
-              <a
-                href={whatsappHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-8 inline-flex items-center gap-2 bg-emerald-700 px-6 py-4 font-black text-white transition hover:bg-emerald-800"
-              >
-                Hizmetler İçin Bilgi Al
-                <ArrowRight size={19} />
-              </a>
-            </div>
-
-            <div className="border-t border-emerald-200">
-              {services.map((service, index) => (
-                <div
-                  key={service.title}
-                  className="grid gap-4 border-b border-emerald-200 py-7 md:grid-cols-[80px_1fr]"
-                >
-                  <p className="text-3xl font-black text-emerald-700">
-                    {String(index + 1).padStart(2, "0")}
-                  </p>
-
-                  <div>
-                    <h3 className="text-2xl font-black text-emerald-950">
-                      {service.title}
-                    </h3>
-
-                    <p className="mt-3 text-base leading-8 text-slate-600">
-                      {service.text}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="surec" className="bg-emerald-950 py-20 text-white">
-        <div className="mx-auto grid max-w-7xl gap-12 px-5 lg:grid-cols-[1fr_1fr]">
-          <div>
-            <p className="border-l-4 border-emerald-400 pl-4 text-sm font-black uppercase tracking-[0.25em] text-emerald-200">
-              Süreç
-            </p>
-
-            <h2 className="mt-5 text-3xl font-black leading-tight md:text-5xl">
-              Hizmet sürecini sade, net ve ulaşılabilir tutuyoruz.
-            </h2>
-
-            <p className="mt-6 text-lg leading-8 text-emerald-50/75">
-              Müşterilerimiz arama veya WhatsApp üzerinden kolayca bilgi alabilir,
-              hizmet detaylarını öğrenebilir ve planlama yapabilir.
-            </p>
-          </div>
-
-          <div className="border-t border-white/15">
-            {steps.map((step, index) => (
-              <div
-                key={step}
-                className="grid gap-4 border-b border-white/15 py-6 md:grid-cols-[70px_1fr]"
-              >
-                <p className="text-3xl font-black text-emerald-300">
-                  {String(index + 1).padStart(2, "0")}
-                </p>
-                <p className="text-lg font-semibold leading-8 text-emerald-50">
-                  {step}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section id="yorumlar" className="bg-white py-20">
-        <div className="mx-auto max-w-7xl px-5">
-          <div className="grid gap-12 lg:grid-cols-[0.75fr_1.25fr]">
-            <div>
-              <p className="border-l-4 border-emerald-700 pl-4 text-sm font-black uppercase tracking-[0.25em] text-emerald-700">
-                Müşteri Yorumları
-              </p>
-
-              <h2 className="mt-5 text-3xl font-black leading-tight text-emerald-950 md:text-5xl">
-                Memnuniyet ve güven bizim için önemlidir.
-              </h2>
-
-              <p className="mt-6 text-lg leading-8 text-slate-600">
-                Hizmet alan müşterilerimizin deneyimleri, yeni müşterilerin karar
-                vermesini kolaylaştırır.
-              </p>
-
-              <div className="mt-8 border-l-4 border-emerald-700 pl-5">
-                <p className="text-sm font-semibold leading-7 text-slate-600">
-                  Siz de fikirlerinizi paylaşmak için işletme ile iletişime
-                  geçebilirsiniz.
-                </p>
-
-                <a
-                  href={reviewWhatsappHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-5 inline-flex items-center gap-2 bg-emerald-700 px-5 py-3 font-black text-white transition hover:bg-emerald-800"
-                >
-                  <Send size={18} />
-                  Yorum Gönder
-                </a>
-              </div>
-            </div>
-
-            <div className="border-t border-emerald-200">
-              {reviews.map((review, index) => (
-                <div
-                  key={`${review.name}-${index}`}
-                  className="border-b border-emerald-200 py-7"
-                >
-                  <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-                    <div>
-                      <p className="text-xl font-black text-emerald-950">
-                        {review.name}
-                      </p>
-                      <p className="text-sm font-semibold text-emerald-700">
-                        Müşteri yorumu
-                      </p>
-                    </div>
-
-                    <div className="flex text-amber-400">
-                      <Star size={18} fill="currentColor" />
-                      <Star size={18} fill="currentColor" />
-                      <Star size={18} fill="currentColor" />
-                      <Star size={18} fill="currentColor" />
-                      <Star size={18} fill="currentColor" />
-                    </div>
-                  </div>
-
-                  <p className="text-base leading-8 text-slate-600">
-                    “{review.text}”
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="relative overflow-hidden bg-emerald-900 py-20 text-white">
-        <img
-          src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1800&q=80"
-          alt="Temizlik iletişim alanı"
-          className="absolute inset-0 h-full w-full object-cover opacity-20"
-        />
-
-        <div className="relative mx-auto grid max-w-7xl items-center gap-8 px-5 lg:grid-cols-[1.2fr_0.8fr]">
-          <div>
-            <p className="border-l-4 border-emerald-300 pl-4 text-sm font-black uppercase tracking-[0.25em] text-emerald-100">
-              Hemen Bilgi Alın
-            </p>
-
-            <h2 className="mt-5 text-3xl font-black leading-tight md:text-5xl">
-              Halı ve temizlik hizmeti için bize ulaşın.
-            </h2>
-
-            <p className="mt-5 max-w-2xl text-lg leading-8 text-emerald-50/80">
-              Fiyat, teslim alma, hizmet bölgesi ve süreç hakkında bilgi almak
-              için WhatsApp’tan yazabilir veya doğrudan arayabilirsiniz.
-            </p>
-          </div>
-
-          <div className="flex flex-col gap-3">
-            <a
-              href={whatsappHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 bg-white px-6 py-4 font-black text-emerald-950 transition hover:bg-emerald-50"
-            >
-              <MessageCircle size={21} />
+          <div className="navMobileActions">
+            <a href={`tel:${phoneTel}`}>Telefonla Ara</a>
+            <a href={whatsappGeneral} target="_blank" rel="noopener noreferrer">
               WhatsApp’tan Yaz
             </a>
+          </div>
 
-            <a
-              href={phoneHref}
-              className="flex items-center justify-center gap-2 border border-white px-6 py-4 font-black text-white transition hover:bg-white hover:text-emerald-950"
-            >
-              <Phone size={21} />
-              {phone}
+          <a className="navCall" href={`tel:${phoneTel}`}>
+            Hemen Ara
+          </a>
+        </nav>
+      </header>
+
+      <section id="anasayfa" className="hero">
+        <div className="heroMedia">
+          <img src={images.hero} alt="Güven Temizlik Alanya" />
+        </div>
+
+        <div className="heroOverlay" />
+
+        <div className="heroContent">
+          <p className="eyebrow">Alanya’da güvenilir temizlik hizmeti</p>
+
+          <h1>
+            Temizliği
+            <span>gözle görünür</span>
+            hale getiriyoruz.
+          </h1>
+
+          <p className="heroText">
+            Güven Temizlik Alanya; ev, ofis, villa, apart, cam ve inşaat sonrası
+            temizlik hizmetlerinde hızlı, titiz ve planlı çalışma sunar.
+          </p>
+
+          <div className="heroActions">
+            <a href={whatsappGeneral} target="_blank" rel="noopener noreferrer">
+              WhatsApp’tan Teklif Al
+            </a>
+            <a href={`tel:${phoneTel}`} className="secondary">
+              Hemen Ara
             </a>
           </div>
+
+          <div className="heroBadges">
+            <span>Ev Temizliği</span>
+            <span>Ofis Temizliği</span>
+            <span>Villa Temizliği</span>
+            <span>İnşaat Sonrası</span>
+          </div>
+        </div>
+
+        <div className="heroContact">
+          <small>Hızlı iletişim</small>
+          <strong>{phoneDisplay}</strong>
         </div>
       </section>
 
-      <section id="iletisim" className="bg-white py-20">
-        <div className="mx-auto grid max-w-7xl gap-12 px-5 lg:grid-cols-[0.85fr_1.15fr]">
-          <div>
-            <p className="border-l-4 border-emerald-700 pl-4 text-sm font-black uppercase tracking-[0.25em] text-emerald-700">
-              İletişim
-            </p>
+      <section className="intro">
+        <div>
+          <p className="sectionLabel">Temizlikte doğru plan</p>
+          <h2>Her alan aynı değildir. Bu yüzden her temizlik aynı yapılmaz.</h2>
+        </div>
 
-            <h2 className="mt-5 text-3xl font-black leading-tight text-emerald-950 md:text-5xl">
-              Bize ulaşın, hizmet hakkında bilgi alın.
-            </h2>
+        <p>
+          Ev, ofis, villa, apart veya inşaat sonrası temizlikte önce alanın
+          ihtiyacı belirlenir. Ardından doğru ekip, doğru zaman ve doğru temizlik
+          akışıyla çalışma yapılır. Amaç yalnızca temiz görünüm değil; ferah,
+          düzenli ve kullanıma hazır alan teslimidir.
+        </p>
+      </section>
 
-            <p className="mt-5 text-lg leading-8 text-slate-600">
-              Arama, WhatsApp veya konum üzerinden kolayca iletişime
-              geçebilirsiniz.
-            </p>
-
-            <div className="mt-8 border-t border-emerald-200">
-              <a
-                href={phoneHref}
-                className="flex items-center gap-4 border-b border-emerald-200 py-5"
-              >
-                <Phone className="text-emerald-700" />
-                <div>
-                  <p className="font-black text-emerald-950">Telefon</p>
-                  <p className="font-semibold text-slate-600">{phone}</p>
-                </div>
-              </a>
-
-              <a
-                href={whatsappHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-4 border-b border-emerald-200 py-5"
-              >
-                <MessageCircle className="text-emerald-700" />
-                <div>
-                  <p className="font-black text-emerald-950">WhatsApp</p>
-                  <p className="font-semibold text-slate-600">
-                    Hızlı bilgi almak için yazın
-                  </p>
-                </div>
-              </a>
-
-              <a
-                href={mapsHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-4 border-b border-emerald-200 py-5"
-              >
-                <MapPin className="text-emerald-700" />
-                <div>
-                  <p className="font-black text-emerald-950">Adres</p>
-                  <p className="font-semibold text-slate-600">{address}</p>
-                </div>
-              </a>
+      <section id="hizmetler" className="services">
+        {services.map((service, index) => (
+          <article
+            className={`serviceLine ${index % 2 === 1 ? "reverse" : ""}`}
+            key={service.title}
+          >
+            <div className="serviceImage">
+              <img src={service.img} alt={service.title} loading="lazy" />
             </div>
-          </div>
 
-          <div className="overflow-hidden border border-emerald-100 bg-slate-100">
-            <iframe
-              src="https://www.google.com/maps?q=Fatih%20Mahallesi%20Mevlana%20Caddesi%20No%2060%20Develi%20Kayseri&output=embed"
-              className="h-[430px] w-full md:h-[560px]"
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            />
+            <div className="serviceText">
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <h3>{service.title}</h3>
+              <p>{service.text}</p>
+
+              <div className="serviceActions">
+                <a href={service.wp} target="_blank" rel="noopener noreferrer">
+                  WhatsApp’tan Bilgi Al
+                </a>
+                <a href={`tel:${phoneTel}`}>Ara</a>
+              </div>
+            </div>
+          </article>
+        ))}
+      </section>
+
+      <section id="neden" className="why">
+        <div className="whyImage">
+          <img src={images.supplies} alt="Temizlik ekipmanları" loading="lazy" />
+        </div>
+
+        <div className="whyText">
+          <p className="sectionLabel">Neden Güven Temizlik?</p>
+          <h2>İş bittikten sonra alan gerçekten temiz hissedilmeli.</h2>
+
+          <p>
+            Temizlikte güven, yalnızca hızlı gelmekle değil; işi düzgün
+            tamamlamakla kazanılır. Bu yüzden her hizmette yüzeyler, köşeler,
+            zeminler, camlar ve yoğun kullanılan alanlar ayrı ayrı ele alınır.
+          </p>
+
+          <div className="whyPoints">
+            <div>
+              <strong>Planlı çalışma</strong>
+              <p>İşe başlamadan önce alan ve ihtiyaç netleştirilir.</p>
+            </div>
+
+            <div>
+              <strong>Detay odaklı temizlik</strong>
+              <p>Mutfak, banyo, cam, zemin ve yüzeyler ayrı ayrı değerlendirilir.</p>
+            </div>
+
+            <div>
+              <strong>Alanya’ya uygun hizmet</strong>
+              <p>Ev, yazlık, apart, villa ve turizm işletmeleri için esnek yapı.</p>
+            </div>
+
+            <div>
+              <strong>Kolay iletişim</strong>
+              <p>Tek tuşla WhatsApp veya arama üzerinden hızlı dönüş alınır.</p>
+            </div>
           </div>
         </div>
       </section>
 
-      <footer className="bg-emerald-950 px-5 py-10 pb-24 text-white md:pb-10">
-        <div className="mx-auto grid max-w-7xl gap-8 md:grid-cols-4">
-          <div className="md:col-span-2">
-            <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-emerald-600 text-white">
-                <Sparkles size={22} />
-              </div>
+      <section className="visualFlow">
+        <div>
+          <img src={images.floor} alt="Zemin temizliği" loading="lazy" />
+        </div>
+        <div>
+          <img src={images.window} alt="Cam temizliği" loading="lazy" />
+        </div>
+        <div>
+          <img src={images.home} alt="Ev temizliği" loading="lazy" />
+        </div>
+      </section>
 
-              <div>
-                <p className="text-lg font-black">{businessName}</p>
-                <p className="text-sm font-semibold text-emerald-100/70">
-                  Profesyonel temizlik hizmetleri
-                </p>
-              </div>
+      <section id="surec" className="process">
+        <p className="sectionLabel">Nasıl ilerliyoruz?</p>
+        <h2>Tekliften temiz alan teslimine kadar sade ve net süreç.</h2>
+
+        <div className="steps">
+          {steps.map((step, index) => (
+            <div key={step}>
+              <span>{index + 1}</span>
+              <p>{step}</p>
             </div>
+          ))}
+        </div>
+      </section>
 
-            <p className="mt-5 max-w-md text-sm leading-7 text-emerald-50/75">
-              Halı, koltuk ve temizlik ihtiyaçlarınız için güven veren,
-              ulaşılabilir ve pratik hizmet anlayışı.
-            </p>
+      <section id="bolgeler" className="areas">
+        <div>
+          <p className="sectionLabel">Hizmet bölgeleri</p>
+          <h2>Alanya ve çevresinde temizlik hizmeti.</h2>
+        </div>
+
+        <div className="areaList">
+          {areas.map((area) => (
+            <span key={area}>{area}</span>
+          ))}
+        </div>
+      </section>
+
+      <section className="bigCta">
+        <div className="bigCtaMedia">
+          <img src={images.detail} alt="Detaylı temizlik" loading="lazy" />
+        </div>
+
+        <div className="bigCtaOverlay" />
+
+        <div className="bigCtaContent">
+          <p className="sectionLabel">Hızlı teklif al</p>
+          <h2>
+            Temizlik ihtiyacını yaz, uygun hizmet planını birlikte netleştirelim.
+          </h2>
+
+          <div className="bigCtaActions">
+            <a href={whatsappGeneral} target="_blank" rel="noopener noreferrer">
+              WhatsApp’tan Yaz
+            </a>
+            <a href={`tel:${phoneTel}`}>Telefonla Ara</a>
           </div>
+        </div>
+      </section>
 
-          <div>
-            <p className="font-black">Linkler</p>
-            <div className="mt-4 flex flex-col gap-3 text-sm font-semibold text-emerald-50/75">
-              <a href="#hakkimizda">Hakkımızda</a>
-              <a href="#hizmetler">Hizmetlerimiz</a>
-              <a href="#surec">Süreç</a>
-              <a href="#iletisim">İletişim</a>
-            </div>
-          </div>
+      <section id="iletisim" className="contact">
+        <div className="contactText">
+          <p className="sectionLabel">İletişim</p>
+          <h2>Güven Temizlik Alanya</h2>
 
-          <div>
-            <p className="font-black">İletişim</p>
-            <div className="mt-4 flex flex-col gap-3 text-sm font-semibold text-emerald-50/75">
-              <a href={phoneHref}>{phone}</a>
-              <a href={mapsHref} target="_blank" rel="noopener noreferrer">
-                {address}
-              </a>
-              <a href={whatsappHref} target="_blank" rel="noopener noreferrer">
-                WhatsApp’tan yazın
-              </a>
-            </div>
+          <p>
+            Ev, ofis, villa, apart, cam ve inşaat sonrası temizlik için hemen
+            WhatsApp’tan yazabilir veya doğrudan arayabilirsiniz.
+          </p>
+
+          <div className="contactLinks">
+            <a href={whatsappGeneral} target="_blank" rel="noopener noreferrer">
+              WhatsApp: {phoneDisplay}
+            </a>
+            <a href={`tel:${phoneTel}`}>Ara: {phoneDisplay}</a>
           </div>
         </div>
 
-        <div className="mx-auto mt-10 max-w-7xl border-t border-white/10 pt-6 text-sm font-semibold text-emerald-50/60">
-          © 2026 Gülüm Halı Yıkama Fabrikası. Tüm hakları saklıdır.
+        <div className="contactImage">
+          <img src={images.office} alt="Ofis temizliği" loading="lazy" />
+        </div>
+      </section>
+
+      <footer className="footer">
+        <div>
+          <strong>Güven Temizlik Alanya</strong>
+          <p>Ev, ofis, villa, apart ve inşaat sonrası temizlik hizmetleri.</p>
+        </div>
+
+        <div className="footerLinks">
+          <a href={`tel:${phoneTel}`}>{phoneDisplay}</a>
+          <a href={whatsappGeneral} target="_blank" rel="noopener noreferrer">
+            WhatsApp
+          </a>
         </div>
       </footer>
 
-      <div className="fixed bottom-4 left-4 right-4 z-50 grid grid-cols-2 gap-3 md:hidden">
+      <div className="floatingButtons">
         <a
-          href={phoneHref}
-          className="flex items-center justify-center gap-2 bg-slate-950 px-5 py-4 text-sm font-black text-white shadow-2xl"
+          href={`tel:${phoneTel}`}
+          className="floatCall"
+          aria-label="Güven Temizlik Alanya telefonla ara"
         >
-          <Phone size={19} />
-          Ara
+          <span>☎</span>
+          <strong>Ara</strong>
         </a>
 
         <a
-          href={whatsappHref}
+          href={whatsappGeneral}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center justify-center gap-2 bg-emerald-600 px-5 py-4 text-sm font-black text-white shadow-2xl"
+          className="floatWp"
+          aria-label="Güven Temizlik Alanya WhatsApp"
         >
-          <MessageCircle size={19} />
-          WhatsApp
+          <span>☘</span>
+          <strong>WhatsApp</strong>
         </a>
       </div>
 
-      <a
-        href={whatsappHref}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 z-50 hidden items-center gap-2 bg-emerald-600 px-6 py-4 font-black text-white shadow-2xl shadow-emerald-900/30 transition hover:-translate-y-1 hover:bg-emerald-700 md:flex"
-      >
-        <MessageCircle size={22} />
-        WhatsApp
-      </a>
+      <style>{`
+        :root {
+          --green: #073d35;
+          --green2: #0b5f52;
+          --mint: #33d6b7;
+          --mintSoft: #e3fbf5;
+          --cream: #f7f2e9;
+          --cream2: #fffaf2;
+          --text: #10211d;
+          --muted: #66726e;
+          --white: #ffffff;
+          --line: rgba(16, 33, 29, 0.14);
+        }
+
+        * {
+          box-sizing: border-box;
+        }
+
+        html {
+          scroll-behavior: smooth;
+        }
+
+        body {
+          margin: 0;
+          background: var(--cream);
+          color: var(--text);
+          font-family: Arial, Helvetica, sans-serif;
+        }
+
+        a {
+          color: inherit;
+          text-decoration: none;
+        }
+
+        img {
+          display: block;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          background: linear-gradient(135deg, #dff6ef, #f7f2e9);
+        }
+
+        .page {
+          min-height: 100vh;
+          overflow: hidden;
+          background:
+            radial-gradient(circle at 8% 4%, rgba(51, 214, 183, 0.16), transparent 28%),
+            radial-gradient(circle at 85% 35%, rgba(7, 61, 53, 0.12), transparent 30%),
+            linear-gradient(180deg, #fbf7ef 0%, #eefaf6 50%, #fbf7ef 100%);
+        }
+
+        .header {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          z-index: 80;
+          min-height: 78px;
+          padding: 14px 6vw;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          background: rgba(255, 250, 242, 0.88);
+          backdrop-filter: blur(18px);
+          border-bottom: 1px solid var(--line);
+        }
+
+        .brand {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          position: relative;
+          z-index: 90;
+        }
+
+        .brandMark {
+          width: 46px;
+          height: 46px;
+          display: grid;
+          place-items: center;
+          border-radius: 50%;
+          background: linear-gradient(135deg, var(--green), var(--green2));
+          color: white;
+          font-weight: 900;
+          font-size: 23px;
+          box-shadow: 0 12px 34px rgba(7, 61, 53, 0.22);
+        }
+
+        .brand strong {
+          display: block;
+          font-size: 19px;
+          letter-spacing: -0.5px;
+          color: var(--green);
+        }
+
+        .brand small {
+          display: block;
+          margin-top: 2px;
+          color: var(--muted);
+          font-size: 12px;
+          font-weight: 700;
+        }
+
+        .menuToggle {
+          display: none;
+        }
+
+        .menuButton {
+          display: none;
+        }
+
+        .nav {
+          display: flex;
+          align-items: center;
+          gap: 26px;
+          color: #243a35;
+          font-size: 14px;
+          font-weight: 800;
+        }
+
+        .nav a {
+          opacity: 0.94;
+        }
+
+        .navCall {
+          padding: 12px 18px;
+          border-radius: 999px;
+          background: var(--green);
+          color: white;
+          box-shadow: 0 12px 28px rgba(7, 61, 53, 0.2);
+        }
+
+        .navMobileActions {
+          display: none;
+        }
+
+        .hero {
+          position: relative;
+          min-height: 100vh;
+          padding: 150px 6vw 90px;
+          display: flex;
+          align-items: center;
+          color: white;
+          isolation: isolate;
+        }
+
+        .heroMedia,
+        .heroMedia img {
+          position: absolute;
+          inset: 0;
+          z-index: -3;
+        }
+
+        .heroMedia img {
+          transform: scale(1.03);
+        }
+
+        .heroOverlay {
+          position: absolute;
+          inset: 0;
+          z-index: -2;
+          background:
+            radial-gradient(circle at 18% 24%, rgba(51, 214, 183, 0.24), transparent 26%),
+            linear-gradient(90deg, rgba(5, 39, 34, 0.96) 0%, rgba(5, 39, 34, 0.78) 42%, rgba(5, 39, 34, 0.28) 100%);
+        }
+
+        .heroContent {
+          position: relative;
+          max-width: 980px;
+        }
+
+        .eyebrow,
+        .sectionLabel {
+          margin: 0 0 18px;
+          color: var(--mint);
+          font-size: 13px;
+          font-weight: 900;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+        }
+
+        .hero h1 {
+          margin: 0;
+          max-width: 980px;
+          font-size: clamp(56px, 9.6vw, 132px);
+          line-height: 0.84;
+          letter-spacing: -6px;
+          font-weight: 950;
+        }
+
+        .hero h1 span {
+          display: block;
+          color: #7fffe3;
+          text-shadow: 0 18px 60px rgba(51, 214, 183, 0.24);
+        }
+
+        .heroText {
+          max-width: 680px;
+          margin: 30px 0 0;
+          color: rgba(255, 255, 255, 0.88);
+          font-size: clamp(18px, 2vw, 24px);
+          line-height: 1.62;
+          font-weight: 600;
+        }
+
+        .heroActions {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 14px;
+          margin-top: 36px;
+        }
+
+        .heroActions a,
+        .bigCtaActions a,
+        .contactLinks a {
+          min-height: 56px;
+          padding: 0 26px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 999px;
+          background: linear-gradient(135deg, #35e2c0, #20aa92);
+          color: #04241f;
+          font-weight: 950;
+          box-shadow: 0 18px 42px rgba(32, 170, 146, 0.26);
+        }
+
+        .heroActions .secondary,
+        .bigCtaActions a:last-child,
+        .contactLinks a:last-child {
+          background: rgba(255, 255, 255, 0.13);
+          color: white;
+          border: 1px solid rgba(255, 255, 255, 0.28);
+          box-shadow: none;
+        }
+
+        .heroBadges {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 12px;
+          margin-top: 44px;
+        }
+
+        .heroBadges span {
+          padding: 11px 15px;
+          border-radius: 999px;
+          background: rgba(255, 255, 255, 0.12);
+          border: 1px solid rgba(255, 255, 255, 0.16);
+          color: rgba(255, 255, 255, 0.9);
+          font-size: 13px;
+          font-weight: 900;
+        }
+
+        .heroContact {
+          position: absolute;
+          right: 6vw;
+          bottom: 44px;
+          padding: 18px 22px;
+          border-radius: 28px;
+          background: rgba(255, 255, 255, 0.13);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          backdrop-filter: blur(14px);
+        }
+
+        .heroContact small {
+          display: block;
+          color: rgba(255, 255, 255, 0.66);
+          font-weight: 800;
+          margin-bottom: 5px;
+        }
+
+        .heroContact strong {
+          color: white;
+          font-size: 20px;
+        }
+
+        .intro {
+          padding: 115px 6vw 75px;
+          display: grid;
+          grid-template-columns: 0.9fr 1.1fr;
+          gap: 8vw;
+          align-items: start;
+        }
+
+        .intro h2,
+        .why h2,
+        .process h2,
+        .areas h2,
+        .bigCta h2,
+        .contact h2 {
+          margin: 0;
+          color: var(--green);
+          font-size: clamp(34px, 5.3vw, 72px);
+          line-height: 0.96;
+          letter-spacing: -2.5px;
+          font-weight: 950;
+        }
+
+        .intro p:last-child,
+        .whyText > p,
+        .contactText p {
+          margin: 0;
+          color: var(--muted);
+          font-size: 19px;
+          line-height: 1.78;
+          font-weight: 600;
+        }
+
+        .services {
+          padding: 30px 0;
+        }
+
+        .serviceLine {
+          min-height: 600px;
+          display: grid;
+          grid-template-columns: 1.1fr 0.9fr;
+          align-items: stretch;
+        }
+
+        .serviceLine.reverse {
+          grid-template-columns: 0.9fr 1.1fr;
+        }
+
+        .serviceLine.reverse .serviceImage {
+          order: 2;
+        }
+
+        .serviceImage {
+          min-height: 560px;
+          overflow: hidden;
+          background: linear-gradient(135deg, var(--mintSoft), var(--cream2));
+        }
+
+        .serviceImage img {
+          transition: transform 0.9s ease, filter 0.9s ease;
+        }
+
+        .serviceLine:hover .serviceImage img {
+          transform: scale(1.045);
+          filter: saturate(1.08);
+        }
+
+        .serviceText {
+          padding: 8vw 6vw;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          background:
+            radial-gradient(circle at 0% 0%, rgba(51, 214, 183, 0.11), transparent 30%),
+            rgba(255, 255, 255, 0.38);
+        }
+
+        .serviceText span {
+          color: #20aa92;
+          font-size: 15px;
+          font-weight: 950;
+        }
+
+        .serviceText h3 {
+          margin: 16px 0 20px;
+          color: var(--green);
+          font-size: clamp(36px, 4.7vw, 72px);
+          line-height: 0.94;
+          letter-spacing: -2.4px;
+          font-weight: 950;
+        }
+
+        .serviceText p {
+          margin: 0;
+          max-width: 600px;
+          color: var(--muted);
+          font-size: 19px;
+          line-height: 1.78;
+          font-weight: 600;
+        }
+
+        .serviceActions {
+          margin-top: 30px;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 12px;
+        }
+
+        .serviceActions a {
+          min-height: 50px;
+          padding: 0 20px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 999px;
+          font-weight: 950;
+        }
+
+        .serviceActions a:first-child {
+          background: var(--green);
+          color: white;
+        }
+
+        .serviceActions a:last-child {
+          background: rgba(7, 61, 53, 0.08);
+          color: var(--green);
+        }
+
+        .why {
+          padding: 0;
+          display: grid;
+          grid-template-columns: 0.95fr 1.05fr;
+          background: #062923;
+          color: white;
+        }
+
+        .whyImage {
+          min-height: 760px;
+        }
+
+        .whyText {
+          padding: 8vw 6vw;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+        }
+
+        .why h2 {
+          color: white;
+        }
+
+        .whyText > p {
+          margin-top: 28px;
+          color: rgba(255, 255, 255, 0.72);
+        }
+
+        .whyPoints {
+          margin-top: 44px;
+          display: grid;
+          gap: 26px;
+        }
+
+        .whyPoints div {
+          padding-bottom: 24px;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+        }
+
+        .whyPoints strong {
+          display: block;
+          margin-bottom: 8px;
+          color: white;
+          font-size: 23px;
+          font-weight: 950;
+        }
+
+        .whyPoints p {
+          margin: 0;
+          color: rgba(255, 255, 255, 0.68);
+          font-size: 17px;
+          line-height: 1.68;
+          font-weight: 600;
+        }
+
+        .visualFlow {
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr;
+          min-height: 430px;
+        }
+
+        .visualFlow div {
+          min-height: 430px;
+          overflow: hidden;
+        }
+
+        .visualFlow img {
+          transition: transform 0.9s ease;
+        }
+
+        .visualFlow div:hover img {
+          transform: scale(1.06);
+        }
+
+        .process {
+          padding: 120px 6vw;
+        }
+
+        .steps {
+          margin-top: 62px;
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 34px;
+        }
+
+        .steps div {
+          padding-top: 28px;
+          border-top: 2px solid rgba(7, 61, 53, 0.2);
+        }
+
+        .steps span {
+          display: block;
+          margin-bottom: 18px;
+          color: #20aa92;
+          font-size: 46px;
+          font-weight: 950;
+          letter-spacing: -2px;
+        }
+
+        .steps p {
+          margin: 0;
+          color: var(--muted);
+          font-size: 18px;
+          line-height: 1.68;
+          font-weight: 800;
+        }
+
+        .areas {
+          padding: 112px 6vw;
+          display: grid;
+          grid-template-columns: 0.9fr 1.1fr;
+          gap: 8vw;
+          align-items: start;
+          background:
+            radial-gradient(circle at 90% 0%, rgba(51, 214, 183, 0.15), transparent 28%),
+            rgba(255, 255, 255, 0.42);
+        }
+
+        .areaList {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 14px;
+        }
+
+        .areaList span {
+          padding: 15px 19px;
+          border-radius: 999px;
+          background: rgba(7, 61, 53, 0.08);
+          color: var(--green);
+          font-weight: 950;
+        }
+
+        .bigCta {
+          position: relative;
+          min-height: 620px;
+          padding: 110px 6vw;
+          display: flex;
+          align-items: center;
+          color: white;
+          isolation: isolate;
+        }
+
+        .bigCtaMedia,
+        .bigCtaMedia img,
+        .bigCtaOverlay {
+          position: absolute;
+          inset: 0;
+        }
+
+        .bigCtaMedia {
+          z-index: -3;
+        }
+
+        .bigCtaOverlay {
+          z-index: -2;
+          background:
+            radial-gradient(circle at 20% 30%, rgba(51, 214, 183, 0.2), transparent 25%),
+            linear-gradient(90deg, rgba(5, 39, 34, 0.92), rgba(5, 39, 34, 0.62));
+        }
+
+        .bigCtaContent {
+          max-width: 880px;
+        }
+
+        .bigCta h2 {
+          color: white;
+        }
+
+        .bigCtaActions {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 14px;
+          margin-top: 34px;
+        }
+
+        .contact {
+          display: grid;
+          grid-template-columns: 0.95fr 1.05fr;
+          min-height: 680px;
+          background: var(--cream2);
+        }
+
+        .contactText {
+          padding: 8vw 6vw;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+        }
+
+        .contactText p {
+          margin-top: 24px;
+        }
+
+        .contactLinks {
+          margin-top: 34px;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 14px;
+        }
+
+        .contactLinks a:last-child {
+          background: var(--green);
+        }
+
+        .contactImage {
+          min-height: 680px;
+        }
+
+        .footer {
+          padding: 36px 6vw 110px;
+          display: flex;
+          justify-content: space-between;
+          gap: 24px;
+          background: #062923;
+          color: white;
+        }
+
+        .footer strong {
+          font-size: 21px;
+        }
+
+        .footer p {
+          margin: 8px 0 0;
+          color: rgba(255, 255, 255, 0.68);
+          line-height: 1.5;
+        }
+
+        .footerLinks {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 18px;
+          align-items: flex-start;
+          font-weight: 950;
+        }
+
+        .floatingButtons {
+          position: fixed;
+          right: 22px;
+          bottom: 22px;
+          z-index: 95;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .floatingButtons a {
+          min-width: 148px;
+          height: 54px;
+          padding: 0 18px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 9px;
+          border-radius: 999px;
+          color: white;
+          font-weight: 950;
+          box-shadow: 0 18px 42px rgba(0, 0, 0, 0.22);
+        }
+
+        .floatingButtons span {
+          width: 30px;
+          height: 30px;
+          display: grid;
+          place-items: center;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.18);
+          font-size: 16px;
+        }
+
+        .floatCall {
+          background: linear-gradient(135deg, #073d35, #0b5f52);
+        }
+
+        .floatWp {
+          background: linear-gradient(135deg, #25d366, #14a84d);
+          color: #04241f !important;
+        }
+
+        @media (max-width: 960px) {
+          .header {
+            min-height: 72px;
+            padding: 12px 18px;
+          }
+
+          .brandMark {
+            width: 42px;
+            height: 42px;
+            font-size: 21px;
+          }
+
+          .brand strong {
+            font-size: 18px;
+          }
+
+          .brand small {
+            display: none;
+          }
+
+          .menuButton {
+            display: grid;
+            gap: 5px;
+            width: 46px;
+            height: 46px;
+            place-content: center;
+            border-radius: 50%;
+            background: var(--green);
+            position: relative;
+            z-index: 100;
+            cursor: pointer;
+            box-shadow: 0 12px 28px rgba(7, 61, 53, 0.22);
+          }
+
+          .menuButton span {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background: white;
+            border-radius: 99px;
+            transition: 0.25s ease;
+          }
+
+          .menuToggle:checked + .menuButton span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+          }
+
+          .menuToggle:checked + .menuButton span:nth-child(2) {
+            opacity: 0;
+          }
+
+          .menuToggle:checked + .menuButton span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+          }
+
+          .nav {
+            position: fixed;
+            top: 72px;
+            left: 0;
+            right: 0;
+            z-index: 85;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0;
+            padding: 16px 18px 22px;
+            background: rgba(255, 250, 242, 0.98);
+            border-bottom: 1px solid var(--line);
+            transform: translateY(-130%);
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.28s ease;
+            box-shadow: 0 30px 80px rgba(7, 61, 53, 0.18);
+          }
+
+          .menuToggle:checked ~ .nav {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+          }
+
+          .nav a {
+            width: 100%;
+            padding: 16px 4px;
+            color: var(--green);
+            border-bottom: 1px solid rgba(7, 61, 53, 0.08);
+            font-size: 16px;
+            font-weight: 950;
+          }
+
+          .navCall {
+            display: none;
+          }
+
+          .navMobileActions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 16px;
+          }
+
+          .navMobileActions a {
+            min-height: 48px;
+            padding: 0 10px;
+            display: grid;
+            place-items: center;
+            border: 0;
+            border-radius: 999px;
+            color: white;
+            background: var(--green);
+            text-align: center;
+            font-size: 14px;
+          }
+
+          .navMobileActions a:last-child {
+            background: #25d366;
+            color: #05241f;
+          }
+
+          .hero {
+            min-height: 94vh;
+            padding: 118px 20px 74px;
+          }
+
+          .heroOverlay {
+            background:
+              radial-gradient(circle at 20% 18%, rgba(51, 214, 183, 0.22), transparent 28%),
+              linear-gradient(180deg, rgba(5, 39, 34, 0.94), rgba(5, 39, 34, 0.7), rgba(5, 39, 34, 0.42));
+          }
+
+          .hero h1 {
+            font-size: clamp(50px, 17vw, 78px);
+            line-height: 0.86;
+            letter-spacing: -3.4px;
+          }
+
+          .heroText {
+            font-size: 18px;
+            line-height: 1.62;
+          }
+
+          .heroActions a {
+            width: 100%;
+          }
+
+          .heroContact {
+            display: none;
+          }
+
+          .intro,
+          .areas,
+          .contact {
+            grid-template-columns: 1fr;
+          }
+
+          .intro,
+          .process,
+          .areas {
+            padding: 78px 20px;
+          }
+
+          .intro h2,
+          .why h2,
+          .process h2,
+          .areas h2,
+          .bigCta h2,
+          .contact h2 {
+            letter-spacing: -1.6px;
+          }
+
+          .serviceLine,
+          .serviceLine.reverse {
+            grid-template-columns: 1fr;
+            min-height: auto;
+          }
+
+          .serviceLine.reverse .serviceImage {
+            order: 0;
+          }
+
+          .serviceImage {
+            min-height: 335px;
+          }
+
+          .serviceText {
+            padding: 54px 20px 68px;
+          }
+
+          .serviceActions {
+            flex-direction: column;
+          }
+
+          .serviceActions a {
+            width: 100%;
+          }
+
+          .why {
+            grid-template-columns: 1fr;
+          }
+
+          .whyImage {
+            min-height: 320px;
+          }
+
+          .whyText {
+            padding: 76px 20px;
+          }
+
+          .visualFlow {
+            grid-template-columns: 1fr;
+          }
+
+          .visualFlow div {
+            min-height: 280px;
+          }
+
+          .steps {
+            grid-template-columns: 1fr;
+            gap: 28px;
+          }
+
+          .bigCta {
+            min-height: 560px;
+            padding: 82px 20px;
+          }
+
+          .bigCtaActions a,
+          .contactLinks a {
+            width: 100%;
+          }
+
+          .contactText {
+            padding: 76px 20px;
+          }
+
+          .contactImage {
+            min-height: 320px;
+            order: -1;
+          }
+
+          .footer {
+            flex-direction: column;
+            padding: 34px 20px 130px;
+          }
+
+          .footerLinks {
+            flex-direction: column;
+            gap: 10px;
+          }
+
+          .floatingButtons {
+            left: 12px;
+            right: 12px;
+            bottom: 12px;
+            flex-direction: row;
+            gap: 10px;
+          }
+
+          .floatingButtons a {
+            min-width: 0;
+            width: 100%;
+            height: 52px;
+            padding: 0 12px;
+          }
+
+          .floatingButtons span {
+            width: 28px;
+            height: 28px;
+          }
+        }
+      `}</style>
     </main>
   );
 }
